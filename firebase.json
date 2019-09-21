@@ -16,6 +16,10 @@
         "function": "getAuditionee"
       },
       {
+        "source": "/function-post",
+        "function": "postAuditionee"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
