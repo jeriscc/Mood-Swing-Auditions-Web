@@ -1,9 +1,11 @@
 import React from 'react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { History } from 'history';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
 import Fab from '@material-ui/core/Fab';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -26,14 +28,18 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(8, 0, 6),
     position: 'relative',
   },
-  fabButton: {
-    color: 'white',
+  fabButtons: {
     position: 'absolute',
     zIndex: 1,
     bottom: -30,
     left: 0,
     right: 0,
     margin: '0 auto',
+    textAlign: 'center',
+  },
+  fabButton: {
+    margin: '0px 4px',
+    color: 'white',
   },
   modal: {
     display: 'flex',
@@ -72,23 +78,36 @@ const freshInput: Input = {
   name: '',
   number: -1,
   picture: '',
-  voice_part: ''
+  voice_part: '',
 };
 
-export default function ControlSection() {
+interface ControlSectionProps {
+  history: History;
+}
+
+const ControlSection: React.FC<ControlSectionProps> = ({ history }) => {
   const classes = useStyles();
 
   const [fields, setFields] = React.useState<Input>(freshInput);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<{ search: boolean; post: boolean }>({
+    search: false,
+    post: false,
+  });
 
-  const handleOpen = () => {
+  const handleOpen = (name: keyof typeof open) => () => {
     setFields(freshInput);
-    setOpen(true);
+    setOpen({
+      ...open,
+      [name]: true,
+    });
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (name: keyof typeof open) => () => {
+    setOpen({
+      ...open,
+      [name]: false,
+    });
   };
 
   const handleChange = (name: keyof typeof fields) => (
@@ -100,7 +119,15 @@ export default function ControlSection() {
     });
   };
 
-  const submit = async () => {
+
+  const search = useCallback(
+    () => {
+      history.push('login');
+    },
+    [history]
+  );
+
+  const submitPost = async () => {
     console.log(fields);
     const res = await fetch('/function-post', {
       method: 'POST',
@@ -111,9 +138,9 @@ export default function ControlSection() {
     });
     console.log(res);
     if (!res.ok) {
-      alert("Failed to add Auditionee: " + (await res.json()).message);
+      alert('Failed to add Auditionee: ' + (await res.json()).message);
     } else {
-      handleClose();
+      handleClose('post');
     }
   };
 
@@ -131,24 +158,33 @@ export default function ControlSection() {
           Use this app to quickly access auditionees.
         </Typography>
       </Container>
-      <Fab
-        color="secondary"
-        aria-label="add"
-        className={classes.fabButton}
-        onClick={handleOpen}>
-        <AddIcon />
-      </Fab>
+      <div className={classes.fabButtons}>
+        <Fab
+          color="primary"
+          aria-label="add"
+          className={classes.fabButton}
+          onClick={handleOpen('search')}>
+          <SearchIcon />
+        </Fab>
+        <Fab
+          color="secondary"
+          aria-label="add"
+          className={classes.fabButton}
+          onClick={handleOpen('post')}>
+          <AddIcon />
+        </Fab>
+      </div>
       <Modal
         aria-labelledby="transition-modal-title"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={open.post}
+        onClose={handleClose('post')}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}>
-        <Fade in={open}>
+        <Fade in={open.post}>
           <div className={classes.paper}>
             <Typography variant="h4" id="transition-modal-title" gutterBottom>
               Add new
@@ -219,8 +255,70 @@ export default function ControlSection() {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={submit}>
+                onClick={submitPost}>
                 Post
+              </Button>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        className={classes.modal}
+        open={open.search}
+        onClose={handleClose('search')}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}>
+        <Fade in={open.search}>
+          <div className={classes.paper}>
+            <Typography variant="h4" id="transition-modal-title" gutterBottom>
+              Search
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  onChange={handleChange('number')}
+                  id="number"
+                  name="number"
+                  label="Audition Number"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="voice-part-simple">
+                    Voice Part
+                  </InputLabel>
+                  <Select
+                    required
+                    onChange={handleChange('voice_part')}
+                    inputProps={{
+                      name: 'voice_part',
+                      id: 'voice-part-simple',
+                    }}
+                    value={fields.voice_part}>
+                    <MenuItem value="Sop">Sopranno</MenuItem>
+                    <MenuItem value="Mezzo">Mezzo</MenuItem>
+                    <MenuItem value="Alto">Alto</MenuItem>
+                    <MenuItem value="Tenor">Tenor</MenuItem>
+                    <MenuItem value="Bari">Baritone</MenuItem>
+                    <MenuItem value="Bass">Bass</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <div className={classes.buttons}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={search}>
+                Search
               </Button>
             </div>
           </div>
@@ -228,4 +326,6 @@ export default function ControlSection() {
       </Modal>
     </div>
   );
-}
+};
+
+export default ControlSection;

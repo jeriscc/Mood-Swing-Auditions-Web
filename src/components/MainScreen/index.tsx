@@ -12,7 +12,7 @@ interface MainScreenProps {
 const MainScreen: React.FC<MainScreenProps> = ({ history }) => (
   <React.Fragment>
     <Navbar />
-    <ControlSection />
+    <ControlSection history={history} />
     <AuditioneeList history={history} />
     <Footer />
   </React.Fragment>
