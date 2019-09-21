@@ -2,12 +2,19 @@ import React from 'react';
 import Navbar from '../Navbar';
 import AuditioneeList from './AuditioneeList';
 import ControlSection from './ControlSection';
+import Footer from './Footer';
+import { History } from 'history';
 
-const MainScreen: React.FC = () => (
+interface MainScreenProps {
+  history: History;
+}
+
+const MainScreen: React.FC<MainScreenProps> = ({ history }) => (
   <React.Fragment>
     <Navbar />
     <ControlSection />
-    <AuditioneeList />
+    <AuditioneeList history={history} />
+    <Footer />
   </React.Fragment>
 );
 

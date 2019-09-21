@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCallback, useState, useMemo } from 'react';
+import { History } from 'history';
 
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,6 +16,7 @@ const useStyles = makeStyles(theme => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+    minHeight: '40vh',
   },
   card: {
     height: '100%',
@@ -29,7 +31,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AuditioneeList() {
+interface AuditioneeListProps {
+  history: History;
+}
+
+const AuditioneeList: React.FC<AuditioneeListProps> = ({ history }) => {
   const [auditionees, setAuditionees] = useState<any[]>([]);
 
   useMemo(async () => {
@@ -37,9 +43,25 @@ export default function AuditioneeList() {
     setAuditionees(await body.json());
   }, []);
 
+  const navToDetails = useCallback(
+    auditionee => {
+      history.push(`auditionee/${auditionee.id}`);
+    },
+    [history]
+  );
+
   const classes = useStyles();
   return (
     <Container className={classes.cardGrid} maxWidth="md">
+      {auditionees === null || auditionees.length === 0 ? (
+        <Typography
+          variant="body1"
+          align="center"
+          color="textSecondary"
+          gutterBottom>
+          Add Your First Auditionee Above!
+        </Typography>
+      ) : null}
       <Grid container spacing={4}>
         {auditionees.map(doc => (
           <Grid item key={doc.id} xs={12} sm={6} md={4}>
@@ -56,10 +78,13 @@ export default function AuditioneeList() {
                 <Typography>Voice part: {doc.voice_part}</Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" color="secondary">
+                <Button
+                  size="small"
+                  color="secondary"
+                  onClick={navToDetails.bind(null, doc)}>
                   View
                 </Button>
-                <Button size="small" color="secondary">
+                <Button size="small" color="secondary" disabled>
                   Edit
                 </Button>
               </CardActions>
@@ -69,4 +94,6 @@ export default function AuditioneeList() {
       </Grid>
     </Container>
   );
-}
+};
+
+export default AuditioneeList;
