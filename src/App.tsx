@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter,
+  Route,
+  Redirect,
+  Switch,
+  RouteComponentProps,
+} from 'react-router-dom';
+import MainScreen from './components/MainScreen';
+import AuditioneeScreen from './components/AuditioneeScreen';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/main" component={MainScreen} />
+        <Route
+          exact
+          path="/auditionee/:id"
+          component={({ match }: RouteComponentProps<{ id: string }>) => (
+            <AuditioneeScreen id={match.params.id} />
+          )}
+        />
+      </Switch>
+      <Route exact path="/" render={redirectToMain} />
+    </BrowserRouter>
   );
-}
+};
+
+const redirectToMain = () => <Redirect to="/main" />;
 
 export default App;
