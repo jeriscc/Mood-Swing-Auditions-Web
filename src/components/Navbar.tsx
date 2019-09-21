@@ -26,7 +26,11 @@ export default function Navbar() {
       <AppBar position="relative">
         <Toolbar>
           <NoteIcon className={classes.icon} />
-          <Typography variant="h6" className={classes.title} color="inherit" noWrap>
+          <Typography
+            variant="h6"
+            className={classes.title}
+            color="inherit"
+            noWrap>
             Mood Swing Auditions
           </Typography>
           <Button color="inherit">Logout</Button>

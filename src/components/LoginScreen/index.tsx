@@ -101,8 +101,7 @@ export default function LoginScreen() {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
-            >
+              className={classes.submit}>
               Sign In
             </Button>
             <Box mt={5}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,30 +29,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 export default function AuditioneeList() {
+  const [auditionees, setAuditionees] = useState<any[]>([]);
+
+  useMemo(async () => {
+    const body = await fetch('/function-get-all');
+    setAuditionees(await body.json());
+  }, []);
 
   const classes = useStyles();
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={4}>
-        {cards.map(card => (
-          <Grid item key={card} xs={12} sm={6} md={4}>
+        {auditionees.map(doc => (
+          <Grid item key={doc.id} xs={12} sm={6} md={4}>
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image="https://source.unsplash.com/random"
-                title="Image title"
+                image={doc.picture}
+                title="Audition Picture"
               />
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h5" component="h2">
-                  Heading
+                  {doc.number + ' ' + doc.name}
                 </Typography>
-                <Typography>
-                  This is a media card. You can use this section to describe the
-                  content.
-                </Typography>
+                <Typography>Voice part: {doc.voice_part}</Typography>
               </CardContent>
               <CardActions>
                 <Button size="small" color="secondary">
