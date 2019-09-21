@@ -1,11 +1,13 @@
 import React from 'react';
+import Navbar from '../Navbar';
 
 interface SingleScreenParams {
   id: string;
 }
 
 const AuditioneeScreen: React.FC<SingleScreenParams> = ({ id }) => (
-  <div>
+  <React.Fragment>
+    <Navbar />
     <ul>
       <li>
         <img
@@ -16,7 +18,7 @@ const AuditioneeScreen: React.FC<SingleScreenParams> = ({ id }) => (
         <div>Jerry Liang</div>
       </li>
     </ul>
-  </div>
+  </React.Fragment>
 );
 
 export default AuditioneeScreen;

@@ -8,11 +8,13 @@ import {
 } from 'react-router-dom';
 import MainScreen from './components/MainScreen';
 import AuditioneeScreen from './components/AuditioneeScreen';
+import LoginScreen from './components/LoginScreen';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
+        <Route exact path="/login" component={LoginScreen} />
         <Route exact path="/main" component={MainScreen} />
         <Route
           exact
