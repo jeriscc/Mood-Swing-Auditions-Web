@@ -119,13 +119,10 @@ const ControlSection: React.FC<ControlSectionProps> = ({ history }) => {
     });
   };
 
-
-  const search = useCallback(
-    () => {
-      history.push('login');
-    },
-    [history]
-  );
+  const search = useCallback(() => {
+    const url = `number=${fields.number}&voice_part=${fields.voice_part}`;
+    history.push('/main/' + url);
+  }, [history, fields]);
 
   const submitPost = async () => {
     console.log(fields);
@@ -233,12 +230,12 @@ const ControlSection: React.FC<ControlSectionProps> = ({ history }) => {
                       id: 'voice-part-simple',
                     }}
                     value={fields.voice_part}>
-                    <MenuItem value="Sop">Sopranno</MenuItem>
-                    <MenuItem value="Mezzo">Mezzo</MenuItem>
-                    <MenuItem value="Alto">Alto</MenuItem>
-                    <MenuItem value="Tenor">Tenor</MenuItem>
-                    <MenuItem value="Bari">Baritone</MenuItem>
-                    <MenuItem value="Bass">Bass</MenuItem>
+                    <MenuItem value="sop">Sopranno</MenuItem>
+                    <MenuItem value="mezzo">Mezzo</MenuItem>
+                    <MenuItem value="alto">Alto</MenuItem>
+                    <MenuItem value="tenor">Tenor</MenuItem>
+                    <MenuItem value="bari">Baritone</MenuItem>
+                    <MenuItem value="bass">Bass</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -302,12 +299,12 @@ const ControlSection: React.FC<ControlSectionProps> = ({ history }) => {
                       id: 'voice-part-simple',
                     }}
                     value={fields.voice_part}>
-                    <MenuItem value="Sop">Sopranno</MenuItem>
-                    <MenuItem value="Mezzo">Mezzo</MenuItem>
-                    <MenuItem value="Alto">Alto</MenuItem>
-                    <MenuItem value="Tenor">Tenor</MenuItem>
-                    <MenuItem value="Bari">Baritone</MenuItem>
-                    <MenuItem value="Bass">Bass</MenuItem>
+                    <MenuItem value="sop">Sopranno</MenuItem>
+                    <MenuItem value="mezzo">Mezzo</MenuItem>
+                    <MenuItem value="alto">Alto</MenuItem>
+                    <MenuItem value="tenor">Tenor</MenuItem>
+                    <MenuItem value="bari">Baritone</MenuItem>
+                    <MenuItem value="bass">Bass</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

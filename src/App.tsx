@@ -18,6 +18,16 @@ const App: React.FC = () => {
         <Route exact path="/main" component={MainScreen} />
         <Route
           exact
+          path="/main/:search"
+          component={({
+            match,
+            history,
+          }: RouteComponentProps<{ search: string }>) => (
+            <MainScreen history={history} search={match.params.search} />
+          )}
+        />
+        <Route
+          exact
           path="/auditionee/:id"
           component={({ match }: RouteComponentProps<{ id: string }>) => (
             <AuditioneeScreen id={match.params.id} />

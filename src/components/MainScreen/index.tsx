@@ -7,13 +7,14 @@ import { History } from 'history';
 
 interface MainScreenProps {
   history: History;
+  search: String | null;
 }
 
-const MainScreen: React.FC<MainScreenProps> = ({ history }) => (
+const MainScreen: React.FC<MainScreenProps> = ({ history, search }) => (
   <React.Fragment>
     <Navbar />
     <ControlSection history={history} />
-    <AuditioneeList history={history} />
+    <AuditioneeList history={history} search={search} />
     <Footer />
   </React.Fragment>
 );

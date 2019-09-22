@@ -33,15 +33,19 @@ const useStyles = makeStyles(theme => ({
 
 interface AuditioneeListProps {
   history: History;
+  search: String | null;
 }
 
-const AuditioneeList: React.FC<AuditioneeListProps> = ({ history }) => {
+const AuditioneeList: React.FC<AuditioneeListProps> = ({ history, search }) => {
   const [auditionees, setAuditionees] = useState<any[]>([]);
 
   useMemo(async () => {
-    const body = await fetch('/function-get-all');
+    const url =
+      '/function-get-all' +
+      (search !== null && search !== '' ? '?' + search : null);
+    const body = await fetch(url);
     setAuditionees(await body.json());
-  }, []);
+  }, [search]);
 
   const navToDetails = useCallback(
     auditionee => {

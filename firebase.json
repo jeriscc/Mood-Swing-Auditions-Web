@@ -8,7 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "/function-get-all",
+        "source": "/function-get-all**",
         "function": "getAuditionees"
       },
       {
